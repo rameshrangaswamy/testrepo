@@ -1,0 +1,27 @@
+def addDollar(param) {
+  return "\$" + param
+}
+parameters {
+    booleanParam(
+        defaultValue: false,
+        name: 'FORCE_UPGRADE'
+    )
+}
+environment {
+    FORCE_UPGRADE = addDollar(params.FORCE_UPGRADE)
+}
+stages {
+    stage('Test') {
+        steps {
+            powershell script: ".\\test.ps1 -forceUpgrade ${env:FORCE_UPGRADE}"
+        }
+    }
+ stage('Test Multiline') {
+        steps {
+            powershell script: '''
+                 .\\test.ps1 `
+                     -forceUpgrade $env:FORCE_UPGRADE
+            '''
+        }
+    }
+}
